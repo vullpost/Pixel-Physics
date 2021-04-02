@@ -65,20 +65,22 @@ void World::update() {
     for (int j = 1; j < world_x - 1; j++) {
       current_material = this->world[i*world_x + j];
       if (current_material == air) {
-        "";  // do nothing
-      } else if (solid_start <= current_material < fluid_start) {
+        // do nothing
+      } else if (solid_start <= current_material && current_material < fluid_start) {
         current_adhesion = adhesion[current_material - solid_start];
-        if (!(solid_start <= this->world[(i+1)*world_x + j] < fluid_start) &&
+        if (!(solid_start <= this->world[(i+1)*world_x + j] && this->world[(i+1)*world_x + j] < fluid_start) &&
         this->world[(i+1)*world_x + j] != static_pixel) {
           this->world[i*world_x + j] = this->world[(i+1)*world_x + j];
           this->world[(i+1)*world_x + j] = current_material;
         } else if (rand() % current_adhesion == 0) {
-          if (!(solid_start <= this->world[(i+1)*world_x + (j-1)] < fluid_start) &&
-          this->world[(i+1)*world_x + (j-1)] != static_pixel) {
+          if (!(solid_start <= this->world[(i+1)*world_x + (j-1)] &&
+              this->world[(i+1)*world_x + (j-1)] < fluid_start) &&
+              this->world[(i+1)*world_x + (j-1)] != static_pixel) {
             this->world[i*world_x + j] = this->world[(i+1)*world_x + (j-1)];
             this->world[(i+1)*world_x + (j-1)] = current_material;
-          } else if (!(solid_start <= this->world[(i+1)*world_x + (j+1)] < fluid_start) &&
-          this->world[(i+1)*world_x + (j+1)] != static_pixel) {
+          } else if (!(solid_start <= this->world[(i+1)*world_x + (j+1)] &&
+                     this->world[(i+1)*world_x + (j+1)] < fluid_start) &&
+                     this->world[(i+1)*world_x + (j+1)] != static_pixel) {
             this->world[i*world_x + j] = this->world[(i+1)*world_x + (j+1)];
             this->world[(i+1)*world_x + (j+1)] = current_material;
           }
@@ -126,13 +128,13 @@ void World::show() {
 int main() {
   World test(80, 24);
   test.show();
-  for (int i = 0; i < 5; i++) {
-    test.spawn_material(sand, 10, 18);
-    test.spawn_material(dirt, 20, 18);
+  for (int i = 0; i < 20; i++) {
+    test.spawn_material(sand, 10, 2);
+    test.spawn_material(dirt, 20, 2);
     test.update();
     test.show();
   }
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 20; i++) {
     test.update();
     test.show();
   }
